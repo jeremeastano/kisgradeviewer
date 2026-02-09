@@ -3,10 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Online Grade Viewer</title>
+
+  <!-- REQUIRED for mobile responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
   <style>
-    body {
+    html, body {
       margin: 0;
-      overflow: hidden; /* Prevent page scrolling */
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Prevent outer page scrolling */
+      -webkit-overflow-scrolling: touch;
     }
 
     iframe {
@@ -14,8 +22,15 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100dvh; /* Mobile-safe viewport height */
       border: none;
+    }
+
+    /* Fallback for older browsers */
+    @supports not (height: 100dvh) {
+      iframe {
+        height: 100vh;
+      }
     }
   </style>
 </head>
@@ -23,7 +38,8 @@
 
   <iframe 
     src="https://script.google.com/macros/s/AKfycbxOoxydIArLjREWTunPQsnLp6HhFwImiBV9is8BOqzV6IWSpBvZ0lseP2srvPTISDyc/exec"
-    allowfullscreen>
+    allowfullscreen
+    loading="lazy">
   </iframe>
 
 </body>
