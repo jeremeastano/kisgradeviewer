@@ -1,46 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Online Grade Viewer</title>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>KISC Online Grade Viewer</title>
+      <style>
+         body {
+         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         
+         /* Page Background - Educational Theme */
+            background-image: url('https://drive.google.com/thumbnail?id=1mYJp5bLYQbOSAvA-ZivMtyAkWh6LBDqM&sz=w1920'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+         margin: 0;
+         display: flex;
+         justify-content: center; 
+         align-items: center; 
+         min-height: 100vh;
+         padding: 20px;
+         box-sizing: border-box;
+         }
 
-  <!-- REQUIRED for mobile responsiveness -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+         .container {
+         background: rgba(255, 255, 255, 0.98); 
+         border-radius: 24px; 
+         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+         padding: 40px;
+         width: 100%;
+         max-width: 600px;
+         text-align: center;
+         }
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden; /* Prevent outer page scrolling */
-      -webkit-overflow-scrolling: touch;
-    }
+         h3 { margin: 10px 0; color: #1e293b; letter-spacing: 0.5px; font-weight: 600; }
+         .logo { width: 80px; margin-bottom: 5px; }
 
-    iframe {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh; /* Mobile-safe viewport height */
-      border: none;
-    }
+         /* --- SEPARATED INPUT & BUTTON --- */
+         .input-group {
+            display: flex;
+            flex-direction: row; 
+            justify-content: center;
+            align-items: center;
+            gap: 12px; 
+            margin: 0 auto 20px auto;
+            max-width: 350px; 
+         }
 
-    /* Fallback for older browsers */
-    @supports not (height: 100dvh) {
-      iframe {
-        height: 100vh;
-      }
-    }
-  </style>
-</head>
-<body>
+         #inputId { 
+            flex: 1; 
+            padding: 12px 15px; 
+            border: 2px solid #27ae60; 
+            background: #ffffff; 
+            border-radius: 50px; 
+            font-size: 16px; 
+            outline: none;
+            color: #334155;
+            text-align: center;
+            letter-spacing: 1px;
+            box-sizing: border-box;
+         }
 
-  <iframe 
-    src="https://script.google.com/macros/s/AKfycbxOoxydIArLjREWTunPQsnLp6HhFwImiBV9is8BOqzV6IWSpBvZ0lseP2srvPTISDyc/exec"
-    allowfullscreen
-    loading="lazy">
-  </iframe>
+         #submitButton { 
+            padding: 12px 25px; 
+            background-color: #27ae60; 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: bold; 
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-sizing: border-box;
+         }
+         #submitButton:hover { background-color: #219150; }
+         
+         @media (max-width: 480px) {
+            .input-group {
+               flex-direction: column; 
+               max-width: 280px;
+            }
+            #inputId, #submitButton {
+               width: 100%; 
+            }
+         }
+         
+         /* --- RETAINED ORIGINAL STYLES --- */
+         #resultContainer { margin-top: 30px; transition: all 0.4s ease-in-out; opacity: 1; }
+         .loader-wrapper { display: flex; flex-direction: column; align-items: center; padding: 20px; animation: fadeIn 0.5s ease; }
+         .aesthetic-spinner { width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(#0000 10%, #27ae60); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 0); animation: spin 0.8s infinite linear; margin-bottom: 15px; }
+         @keyframes spin { to { transform: rotate(1turn); } }
+         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+         .fade-in-results { animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-</body>
+         .report-header { text-align: left; margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f9f9f9; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
+         .report-header div { font-size: 13px; color: #555; }
+         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+         th { background-color: #2c3e50; color: white; padding: 10px; border: 1px solid #34495e; }
+         td { border: 1px solid #e0e0e0; padding: 8px; text-align: center; }
+         .sub-name { text-align: left; font-weight: bold; background-color: #fcfcfc; }
+         
+         /* --- ORIGINAL REMARKS & TOTAL ROW STYLES --- */
+         .total-row { background-color: #ecf0f1; font-weight: bold; }
+         .remarks-box { margin-top: 15px; text-align: left; padding: 10px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 4px; font-size: 14px; }
+         
+         .copyright { margin-top: 30px; padding-top: 15px; border-top: 1px solid #eeeeee; font-size: 11px; color: #999999; text-align: center; text-transform: uppercase; }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <img src="https://drive.google.com/thumbnail?id=1Rs4FB2_1ze22o4UonO2ns9gXyCVy0kT9" alt="School Logo" class="logo">
+         <h3>KIDACO INTEGRATED SCHOOL</h3>
+         <p style="margin-bottom: 25px; font-size: 15px; color: #64748b;">Online Grade Viewer Version 1.0</p>
+         
+         <div class="input-group">
+            <input type="text" id="inputId" placeholder="Student Access Code" maxlength="6">
+            <button id="submitButton" onclick="fetchData()">SUBMIT</button>
+         </div>
+
+         <div id="resultContainer">
+            <div class="copyright">&copy; 2026 Jereme Astaño. All rights reserved.</div>
+         </div>
+      </div>
+
+      <script>
+         function fetchData() {
+            var studentId = document.getElementById("inputId").value;
+            var container = document.getElementById("resultContainer");
+            if (!studentId) { alert("Please enter your student access code."); return; }
+            container.style.opacity = "0";
+            setTimeout(function() {
+               container.innerHTML = `<div class="loader-wrapper"><div class="aesthetic-spinner"></div><div class="loader-text">Accessing student records...</div></div>`;
+               container.style.opacity = "1";
+            }, 200);
+            google.script.run.withSuccessHandler(displayResult).submitData(studentId);
+         }
+
+         function displayResult(result) {
+            var container = document.getElementById("resultContainer");
+            container.style.opacity = "0";
+            setTimeout(function() {
+               container.innerHTML = `<div class="fade-in-results">${result}</div><div class="copyright">&copy; 2026 Jereme Astaño. All rights reserved.</div>`;
+               container.style.opacity = "1";
+            }, 300);
+         }
+      </script>
+   </body>
 </html>
